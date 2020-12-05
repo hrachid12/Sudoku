@@ -66,34 +66,55 @@ function check_game_solution () {
     console.log("checked")
 }
 
+
+// Add an event listener to each game board cell
 document.querySelectorAll(".sudoku-cell").forEach(e => e.addEventListener("click", () => {
+    // curr_cell points to the selected cell (one that a user already clicked and is highlighted in blue)
     let curr_cell = document.querySelector(".selected-cell");
     
+    // Static cells cannot be selected
     if (e.classList.contains("static-cell")) {
         // do nothing
-    } else if (curr_cell == e) {
+    } 
+    // If the selected cell was clicked again, de-select it
+    else if (curr_cell == e) {
         curr_cell.classList.remove("selected-cell");
-    } else if (curr_cell == null) {
+    } 
+    // If there wasn't a selected cell, highlight the clicked cell
+    else if (curr_cell == null) {
         e.classList.add("selected-cell");
-    } else {
+    } 
+    // Otherwise, de-select the highlighted cell and then select the clicked cell
+    else {
         curr_cell.classList.remove("selected-cell");
         e.classList.add("selected-cell");
     }
 }))
 
+// Adds an event listener to the number selection on the bottom of the page
 document.querySelectorAll(".num-select").forEach(n => n.addEventListener("click", () => {
+    // Cell points to the selected cell - the one highlighted in blue
     let cell = document.querySelector(".selected-cell");
 
+    // Check if the user's selection for the cell is valid
     let res = check_selection(cell, parseInt(n.textContent));
-    console.log(res);
+    
+    // If not, add the 'incorrect' class to the cell -- this highlights the cell in red
     if (!res) {
         cell.classList.add("incorrect");
-    } else {
+    } 
+    // Otherwise, remove the 'incorrect' class from the cell
+    else {
         cell.classList.remove("incorrect");
     }
 
+    // Update the cell's value to the user's selection
     cell.textContent = n.textContent;
 
+    // If the user selected one of the cells labeled 1-9, that number is placed on the 
+    // Correct position on the game board
+    // If the user selected the empty cell, then 0 is placed on the game board
+    // The position on the game board is determined using the cell's id
     if (parseInt(n.textContent) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
         game_board[cell.id[0]][cell.id[1]] = parseInt(n.textContent);
     } else {
