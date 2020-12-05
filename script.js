@@ -14,6 +14,10 @@ function check_selection (selected_cell, desired_num) {
     // This function checks if the user's selection is valid.
     // Returns true if it is, returns false otherwise
 
+    // Special case for input from keyboard
+    if (desired_num === 0) {
+        return true;
+    }
 
     // Row and col based on selected_cell
     let row = selected_cell.id[0];
@@ -95,30 +99,32 @@ document.querySelectorAll(".sudoku-cell").forEach(e => e.addEventListener("click
 document.querySelectorAll(".num-select").forEach(n => n.addEventListener("click", () => {
     // Cell points to the selected cell - the one highlighted in blue
     let cell = document.querySelector(".selected-cell");
-
-    // Check if the user's selection for the cell is valid
-    let res = check_selection(cell, parseInt(n.textContent));
     
-    // If not, add the 'incorrect' class to the cell -- this highlights the cell in red
-    if (!res) {
-        cell.classList.add("incorrect");
-    } 
-    // Otherwise, remove the 'incorrect' class from the cell
-    else {
-        cell.classList.remove("incorrect");
-    }
+    if (cell !== null) {
+        // Check if the user's selection for the cell is valid
+        let res = check_selection(cell, parseInt(n.textContent));
+        
+        // If not, add the 'incorrect' class to the cell -- this highlights the cell in red
+        if (!res) {
+            cell.classList.add("incorrect");
+        } 
+        // Otherwise, remove the 'incorrect' class from the cell
+        else {
+            cell.classList.remove("incorrect");
+        }
 
-    // Update the cell's value to the user's selection
-    cell.textContent = n.textContent;
+        // Update the cell's value to the user's selection
+        cell.textContent = n.textContent;
 
-    // If the user selected one of the cells labeled 1-9, that number is placed on the 
-    // Correct position on the game board
-    // If the user selected the empty cell, then 0 is placed on the game board
-    // The position on the game board is determined using the cell's id
-    if (parseInt(n.textContent) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
-        game_board[cell.id[0]][cell.id[1]] = parseInt(n.textContent);
-    } else {
-        game_board[cell.id[0]][cell.id[1]] = 0;
+        // If the user selected one of the cells labeled 1-9, that number is placed on the 
+        // Correct position on the game board
+        // If the user selected the empty cell, then 0 is placed on the game board
+        // The position on the game board is determined using the cell's id
+        if (parseInt(n.textContent) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+            game_board[cell.id[0]][cell.id[1]] = parseInt(n.textContent);
+        } else {
+            game_board[cell.id[0]][cell.id[1]] = 0;
+        }
     }
 })) 
 
@@ -133,12 +139,25 @@ document.onkeypress = function (e) {
         // If so, check if the key press is an integer between 0-9
         // Ignore all other key presses
         if (parseInt(e.key) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+
+            // Check if the user's selection for the cell is valid
+            let res = check_selection(selected_cell, parseInt(e.key));
+            
+            // If not, add the 'incorrect' class to the cell -- this highlights the cell in red
+            if (!res) {
+                selected_cell.classList.add("incorrect");
+            } 
+            // Otherwise, remove the 'incorrect' class from the cell
+            else {
+                selected_cell.classList.remove("incorrect");
+            }
+
             // Zero empties the cell
             if (parseInt(e.key) === 0) {
                 selected_cell.textContent = "";
             } else {
                 // All other integers fill in the cell
-                selected_cell.textContent = parseInt(e.key);
+                selected_cell.textContent = e.key;
             }
             // Update the game board
             game_board[selected_cell.id[0]][selected_cell.id[1]] = parseInt(e.key)
