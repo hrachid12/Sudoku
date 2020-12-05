@@ -95,6 +95,7 @@ document.querySelectorAll(".sudoku-cell").forEach(e => e.addEventListener("click
     }
 }))
 
+
 // Adds an event listener to the number selection on the bottom of the page
 document.querySelectorAll(".num-select").forEach(n => n.addEventListener("click", () => {
     // Cell points to the selected cell - the one highlighted in blue
