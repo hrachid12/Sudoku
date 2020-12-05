@@ -77,11 +77,11 @@ document.querySelectorAll(".sudoku-cell").forEach(e => e.addEventListener("click
         // do nothing
     } 
     // If the selected cell was clicked again, de-select it
-    else if (curr_cell == e) {
+    else if (curr_cell === e) {
         curr_cell.classList.remove("selected-cell");
     } 
     // If there wasn't a selected cell, highlight the clicked cell
-    else if (curr_cell == null) {
+    else if (curr_cell === null) {
         e.classList.add("selected-cell");
     } 
     // Otherwise, de-select the highlighted cell and then select the clicked cell
@@ -121,5 +121,29 @@ document.querySelectorAll(".num-select").forEach(n => n.addEventListener("click"
         game_board[cell.id[0]][cell.id[1]] = 0;
     }
 })) 
+
+
+// Event listener that allows the user to fill a cell using the keyboard
+document.onkeypress = function (e) {
+    // Get the cell with the selected-cell class
+    let selected_cell = document.querySelector(".selected-cell");
+
+    // Check that the user has selected a cell
+    if (selected_cell !== null) {
+        // If so, check if the key press is an integer between 0-9
+        // Ignore all other key presses
+        if (parseInt(e.key) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]) {
+            // Zero empties the cell
+            if (parseInt(e.key) === 0) {
+                selected_cell.textContent = "";
+            } else {
+                // All other integers fill in the cell
+                selected_cell.textContent = parseInt(e.key);
+            }
+            // Update the game board
+            game_board[selected_cell.id[0]][selected_cell.id[1]] = parseInt(e.key)
+        }
+    }
+}
 
 document.querySelector(".btn").addEventListener("click", check_game_solution);
