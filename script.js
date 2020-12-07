@@ -296,12 +296,16 @@ document.onkeypress = function (e) {
     }
 }
 
+// Event listener for the submit button
 document.querySelector(".btn").addEventListener("click", () => {
+    // Check the user's attempt
     let res = check_game_solution();
 
     if (res) {
+        // Correct solution
         document.querySelector(".submit-msg").textContent = "Solution is correct! You win!";
     } else {
+        // Incorrect solution
         document.querySelector(".submit-msg").textContent = "Sorry! Please try again!"
     }
 });
