@@ -31,7 +31,7 @@ function check_game_solution () {
         let box_sum = 0;
 
         // Iterate from 1 to 9 to check if each cell contains the integer
-        for (var j = 1; j <= 9; j++) {
+        for (var j = 1; j <= box_cells.length; j++) {
             // Iterate over the cells to see if it contains integer j
             for (var k = 0; k < box_cells.length; k++) {
                 // Get the row and column of the current cell
@@ -75,7 +75,7 @@ function check_game_solution () {
         let row_sum = 0;
 
         // Iterate from 1 to 9 to check if each cell contains the integer
-        for (var i = 1; i <= 9; i++) {
+        for (var i = 1; i <= game_board[key].length; i++) {
             // Iterate over the cells in the row to see if it contains integer i
             for (var cell = 0; cell < game_board[key].length; cell++) {
                 // Check if the cell equals integer i
@@ -113,7 +113,7 @@ function check_game_solution () {
         let col_sum = 0;
 
         // Iterate from 1 to 9 to check if each cell contains the integer
-        for (var i = 1; i <= 9; i++) {
+        for (var i = 1; i <= game_board.length; i++) {
             // Iterate over the rows within the column to see if it contains the int i
             // Each row is represented by the key
             for (key in game_board) {
