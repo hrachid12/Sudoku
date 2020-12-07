@@ -52,4 +52,10 @@ button {
 
 .msg-div {
     width: 70px;
+    text-align: center;
+}
+
+.submit-msg {
+    margin-top: 30px;
+    
 }

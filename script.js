@@ -1,3 +1,5 @@
+const VALID_SUM = 45;
+
 let game_board = {
     "a":[5, 8, 6, 0, 7, 0, 0, 0, 0],
     "b":[0, 0, 0, 9, 0, 1, 6, 0, 0],
@@ -10,8 +12,141 @@ let game_board = {
     "i":[0, 0, 0, 0, 2, 0, 4, 7, 0]
 }
 
+let boxes = [".top-left", ".top-mid", ".top-right", ".mid-left", ".mid-mid", ".mid-right", ".bot-left", ".bot-mid", ".bot-right"];
+
+function check_game_solution () {
+    // This function contains the algorithm that verifys the users solution to the puzzle
+    
+    // num_present is an int value that keeps track of how many times an integer is present in a row/col/box
+    let num_present = 0;
+
+    // First check each 3x3 box
+    // Iterate over the boxes on the board
+    for (var i = 0; i < boxes.length; i++) {
+        // Select all the cells with the current box class
+        let box_cells = document.querySelectorAll(boxes[i]);
+
+        // Sum of all integers in the box
+        // Valid solution will equal VALID_SUM
+        let box_sum = 0;
+
+        // Iterate from 1 to 9 to check if each cell contains the integer
+        for (var j = 1; j <= 9; j++) {
+            // Iterate over the cells to see if it contains integer j
+            for (var k = 0; k < box_cells.length; k++) {
+                // Get the row and column of the current cell
+                let row = box_cells[k].id[0];
+                let col = box_cells[k].id[1];
+
+                // Check if the cell equals integer j
+                // Increment counter by 1 if it does
+                if (game_board[row][col] === j) {
+                    num_present += 1; 
+                }
+            }   
+
+            // Add j to the sum 
+            box_sum = box_sum + j;
+            
+            // If integer j was present more than once in the box, attempt is invalid
+            if (num_present !== 1) {
+                return false
+            } else {
+                // Otherwise, reset counter for next integer
+                num_present = 0;
+            }
+        }
+
+        // check the calculated sum against the valid sum
+        // Return false if they aren't equal
+        if (box_sum !== VALID_SUM) {
+            return false
+        }
+    }
+
+    // Reset counter
+    num_present = 0;
+
+    // Second, check each row
+    // Iterate over each row
+    for (key in game_board) {
+        // Sum of all integers in the row
+        // Valid solution will equal VALID_SUM
+        let row_sum = 0;
+
+        // Iterate from 1 to 9 to check if each cell contains the integer
+        for (var i = 1; i <= 9; i++) {
+            // Iterate over the cells in the row to see if it contains integer i
+            for (var cell = 0; cell < game_board[key].length; cell++) {
+                // Check if the cell equals integer i
+                // Increment counter by 1 if it does
+                if (game_board[key][cell] === i) {
+                    num_present += 1;
+                }
+            }
+
+            row_sum = row_sum + i;
+
+            // If integer i was present more than once in the box, attempt is invalid
+            if (num_present !== 1) {
+                return false
+            } else {
+                // Otherwise, reset counter for next integer
+                num_present = 0;
+            }
+        }
+        // check the calculated sum against the valid sum
+        // Return false if they aren't equal
+        if (row_sum !== VALID_SUM) {
+            return false
+        }
+    }
+
+    // Reset counter
+    num_present = 0;
+
+    // Check each column
+    // Iterate over each column
+    for (var col = 0; col < game_board.length ; col++) {
+        // Sum of all integers in the col
+        // Valid solution will equal VALID_SUM
+        let col_sum = 0;
+
+        // Iterate from 1 to 9 to check if each cell contains the integer
+        for (var i = 1; i <= 9; i++) {
+            // Iterate over the rows within the column to see if it contains the int i
+            // Each row is represented by the key
+            for (key in game_board) {
+                if (game_board[key][col] === i) {
+                    num_present += 1;
+                }
+            }
+            
+            col_sum = col_sum + i;
+
+            // If integer i was present more than once in the box, attempt is invalid
+            if (num_present !== 1) {
+                return false
+            } else {
+                // Otherwise, reset counter for next integer
+                num_present = 0;
+            }
+        }
+
+        // check the calculated sum against the valid sum
+        // Return false if they aren't equal
+        if (col_sum !== VALID_SUM) {
+            return false
+        }
+    }
+    
+    // All tests pass, return true
+    return true;
+}
+
+
 function check_selection (selected_cell, desired_num) {
-    // This function checks if the user's selection is valid.
+    // This function checks if the user's selection for a cell is valid.
     // Returns true if it is, returns false otherwise
 
     // Special case for input from keyboard
@@ -63,11 +198,6 @@ function check_selection (selected_cell, desired_num) {
 
 
     return true;
-}
-
-
-function check_game_solution () {
-    console.log("checked")
 }
 
 
@@ -166,4 +296,12 @@ document.onkeypress = function (e) {
     }
 }
 
-document.querySelector(".btn").addEventListener("click", check_game_solution);
+document.querySelector(".btn").addEventListener("click", () => {
+    let res = check_game_solution();
+
+    if (res) {
+        document.querySelector(".submit-msg").textContent = "Solution is correct! You win!";
+    } else {
+        document.querySelector(".submit-msg").textContent = "Sorry! Please try again!"
+    }
+});
